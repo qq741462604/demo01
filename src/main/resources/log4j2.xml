@@ -2,7 +2,8 @@
 <Configuration status="WARN" monitorInterval="30">
     <Properties>
         <Property name="LOG_PATTERN">[%d{yyyy-MM-dd HH:mm:ss.SSS}] [%thread] [%-5level] [%logger{36}] - %msg%n</Property>
-        <Property name="APP_LOG_ROOT">d:/traeproject/demo01/logs</Property>
+        <!-- 将日志目录改为相对路径 -->
+        <Property name="APP_LOG_ROOT">logs</Property>
     </Properties>
     <Appenders>
         <Console name="Console" target="SYSTEM_OUT">
