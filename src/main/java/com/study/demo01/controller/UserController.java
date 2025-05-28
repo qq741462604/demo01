@@ -4,10 +4,7 @@ import com.study.demo01.entity.User;
 import com.study.demo01.service.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -30,5 +27,17 @@ public class UserController {
         List<User> list = userService.getAllUsers();
         log.info("queryUser is {}", list);
         return list;
+    }
+
+    @PostMapping("/addUser")
+    public String addUser(@RequestBody User user) {
+        int result = userService.addUser(user);
+        if (result > 0) {
+            log.info("User added successfully: {}", user);
+            return "User added successfully: " + user.getName();
+        } else {
+            log.error("Failed to add user: {}", user);
+            return "Failed to add user: " + user.getName();
+        }
     }
 }
