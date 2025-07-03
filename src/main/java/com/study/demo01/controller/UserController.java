@@ -2,42 +2,51 @@ package com.study.demo01.controller;
 
 import com.study.demo01.entity.User;
 import com.study.demo01.service.UserService;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 @RestController
-@Slf4j
+@RequestMapping("/api/users")
 public class UserController {
+    
     @Autowired
     private UserService userService;
-
-    @GetMapping("/createUser")
-    public String createUser(@RequestParam String name, @RequestParam String email) {
-        User user = new User(name, email);
-        // 打印用户信息
-        log.info("User Created: {}", user);
-        return "User Created: " + user.getName() + ", " + user.getEmail();
+    
+    @PostMapping
+    public User createUser(@RequestBody User user) {
+        return userService.createUser(user);
     }
-
-    @GetMapping("queryUser")
-    public List<User> queryUser(){
-        List<User> list = userService.getAllUsers();
-        log.info("queryUser is {}", list);
-        return list;
+    
+    @PutMapping("/{id}")
+    public User updateUser(@PathVariable Long id, @RequestBody User user) {
+        user.setId(id);
+        return userService.updateUser(user);
     }
-
-    @PostMapping("/addUser")
-    public String addUser(@RequestBody User user) {
-        int result = userService.addUser(user);
-        if (result > 0) {
-            log.info("User added successfully: {}", user);
-            return "User added successfully: " + user.getName();
-        } else {
-            log.error("Failed to add user: {}", user);
-            return "Failed to add user: " + user.getName();
+    
+    @GetMapping("/{id}")
+    public User getUser(@PathVariable Long id) {
+        return userService.getUserById(id);
+    }
+    
+    @GetMapping
+    public List<User> getAllUsers() {
+        return userService.getAllUsers();
+    }
+    
+    @DeleteMapping("/{id}")
+    public void deleteUser(@PathVariable Long id) {
+        userService.deleteUser(id);
+    }
+    
+    @PostMapping("/login")
+    public User login(@RequestBody User user, HttpServletRequest request) {
+        User existingUser = userService.getUserByUsername(user.getUsername());
+        if (existingUser != null && userService.verifyPassword(user.getPassword(), existingUser.getPassword())) {
+            userService.updateLoginInfo(existingUser, request.getRemoteAddr());
+            return existingUser;
         }
+        return null;
     }
 }

@@ -1,20 +1,43 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<!DOCTYPE mapper
-        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
-        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.study.demo01.mapper.UserMapper">
-    <resultMap id="BaseResultMap" type="com.study.demo01.entity.User">
-        <id column="id" property="id"/>
-        <result column="name" property="name"/>
-        <result column="email" property="email"/>
+    <resultMap id="userMap" type="com.study.demo01.entity.User">
+        <id property="id" column="id"/>
+        <result property="permissions" column="permissions" typeHandler="com.study.demo01.config.StringListTypeHandler"/>
+        <!-- 其他字段映射 -->
     </resultMap>
 
-    <select id="findAll" resultMap="BaseResultMap">
-        SELECT id, name, email FROM User
-    </select>
-
     <insert id="insert" parameterType="com.study.demo01.entity.User" useGeneratedKeys="true" keyProperty="id">
-        INSERT INTO User (name, email)
-        VALUES (#{name}, #{email})
+        INSERT INTO user (name, email, username, password, role, permissions, status, create_time, update_time)
+        VALUES (#{name}, #{email}, #{username}, #{password}, #{role}, 
+                #{permissions,typeHandler=com.study.demo01.config.StringListTypeHandler}, 
+                #{status}, #{createTime}, #{updateTime})
     </insert>
+    
+    <update id="update" parameterType="com.study.demo01.entity.User">
+        UPDATE user
+        SET name = #{name},
+            email = #{email},
+            role = #{role},
+            permissions = #{permissions,typeHandler=com.study.demo01.config.StringListTypeHandler},
+            status = #{status},
+            update_time = #{updateTime}
+        WHERE id = #{id}
+    </update>
+    
+    <select id="selectById" resultMap="userMap">
+        SELECT * FROM user WHERE id = #{id}
+    </select>
+    
+    <select id="selectByUsername" resultMap="userMap">
+        SELECT * FROM user WHERE username = #{username}
+    </select>
+    
+    <select id="selectByEmail" resultMap="userMap">
+        SELECT * FROM user WHERE email = #{email}
+    </select>
+    
+    <select id="selectAll" resultMap="userMap">
+        SELECT * FROM user
+    </select>
 </mapper>

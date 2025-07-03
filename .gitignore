@@ -27,3 +27,4 @@ replay_pid*
 target/
 .idea/
 *.iml
+/src/main/resources/1.txt
