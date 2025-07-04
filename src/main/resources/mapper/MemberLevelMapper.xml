@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.study.demo01.mapper.MemberLevelMapper">
+    <insert id="insert" parameterType="com.study.demo01.entity.MemberLevel" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO member_level (level_name, level_code, discount_rate, points_threshold, description, create_time, update_time)
+        VALUES (#{levelName}, #{levelCode}, #{discountRate}, #{pointsThreshold}, #{description}, #{createTime}, #{updateTime})
+    </insert>
+    
+    <update id="update" parameterType="com.study.demo01.entity.MemberLevel">
+        UPDATE member_level
+        SET level_name = #{levelName},
+            level_code = #{levelCode},
+            discount_rate = #{discountRate},
+            points_threshold = #{pointsThreshold},
+            description = #{description},
+            update_time = #{updateTime}
+        WHERE id = #{id}
+    </update>
+    
+    <select id="selectById" resultType="com.study.demo01.entity.MemberLevel">
+        SELECT * FROM member_level WHERE id = #{id}
+    </select>
+    
+    <select id="selectByLevelCode" resultType="com.study.demo01.entity.MemberLevel">
+        SELECT * FROM member_level WHERE level_code = #{levelCode}
+    </select>
+    
+    <select id="selectAll" resultType="com.study.demo01.entity.MemberLevel">
+        SELECT * FROM member_level ORDER BY points_threshold ASC
+    </select>
+    
+    <select id="selectByPointsThreshold" resultType="com.study.demo01.entity.MemberLevel">
+        SELECT * FROM member_level 
+        WHERE points_threshold <= #{points} 
+        ORDER BY points_threshold DESC 
+        LIMIT 1
+    </select>
+    
+    <delete id="deleteById">
+        DELETE FROM member_level WHERE id = #{id}
+    </delete>
+</mapper>
